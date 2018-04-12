@@ -10,9 +10,16 @@ namespace AspNetCoreDemoApp.Controllers
 		[HttpGet]
 		public IEnumerable<string> Get()
 		{
-			return new[] { "value1", "value2" };
+			return new[] { "The status of your tax return is awaiting for client response" };
 		}
-
+                
+                // POST: api/values
+                [HttpPost]
+                public IEnumerable<string> Post()
+		{
+			return new[] { "The status of your tax return is awaiting for client response" };
+		}
+                
 		// GET api/values/5
 		[HttpGet("{id}")]
 		public string Get(int id)
