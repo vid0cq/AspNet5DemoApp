@@ -17,7 +17,7 @@ namespace AspNetCoreDemoApp.Controllers
 		[HttpGet("{id}")]
 		public string Get(int id)
 		{
-			return "value" + id;
+			return "value" + id + "change(s)";
 		}
 	}
 }
