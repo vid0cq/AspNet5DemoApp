@@ -15,9 +15,10 @@ namespace AspNetCoreDemoApp.Controllers
                 
                 // POST: api/values
                 [HttpPost]
-                public IEnumerable<string> Post()
+                public string Post()
 		{
-			return new[] { "The status of your tax return is awaiting for client response" };
+                        return 
+                        "{ \"version\": \"1.0\", \"response\": { \"outputSpeech\": { \"type\": \"PlainText\", \"text\": \"The status of your tax return is awaiting for client response\" } } }";
 		}
                 
 		// GET api/values/5
