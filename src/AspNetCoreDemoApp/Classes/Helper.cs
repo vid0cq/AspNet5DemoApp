@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -39,7 +40,7 @@ namespace AspNetCoreDemoApp.Classes
             {
                 string directory = Environment.CurrentDirectory;
 
-                XDocument xmlDoc = XDocument.Load(directory + "\\Files\\State.xml");
+                XDocument xmlDoc = XDocument.Load(Path.Combine(Path.Combine(directory,"Files"),"State.xml"));
 
                 XElement foundElement = FoundElement(xmlDoc, taxyear, email);
 
