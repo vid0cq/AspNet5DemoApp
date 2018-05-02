@@ -59,7 +59,7 @@ namespace AspNetCoreDemoApp.Classes
                     xmlDoc.Element("Clients").Add(root);
                 }
 
-                xmlDoc.Save(Path.Combine(dir, "State.xml"));
+                xmlDoc.Save(Path.Combine(Path.Combine(dir, "Files"), "State.xml"));
                 return null;
             }
             catch (Exception ex)

@@ -1,3 +1,21 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Clients>
+  <Client>
+    <TaxYear>2017</TaxYear>
+    <Email>andrei.g88@gmail.com</Email>
+    <Status>4</Status>
+    <TaxDue>222</TaxDue>
+  </Client>
+  <Client>
+    <TaxYear>2018</TaxYear>
+    <Email>andrei.g88@gmail.com</Email>
+    <Status>4</Status>
+    <TaxDue>222</TaxDue>
+  </Client>
+  <Client>
+    <TaxYear>2018</TaxYear>
+    <Email>victor.chira@gmail.com</Email>
+    <Status>4</Status>
+    <TaxDue>222</TaxDue>
+  </Client>
 </Clients>
