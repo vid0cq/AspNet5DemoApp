@@ -33,31 +33,40 @@ namespace AspNetCoreDemoApp.Classes
             return taxState;
         }
 
-        public static void WriteState(string taxyear, string email, int status, decimal taxdue)
+        public static object WriteState(string taxyear, string email, int status, decimal taxdue)
         {
-            string directory = Environment.CurrentDirectory;
-
-            XDocument xmlDoc = XDocument.Load(directory + "\\Files\\State.xml");
-
-            XElement foundElement = FoundElement(xmlDoc, taxyear, email);            
-
-            if (foundElement != null)
+            try
             {
-                foundElement.Element("Status").Value = status.ToString();
-                foundElement.Element("TaxDue").Value = taxdue.ToString();
+                string directory = Environment.CurrentDirectory;
+
+                XDocument xmlDoc = XDocument.Load(directory + "\\Files\\State.xml");
+
+                XElement foundElement = FoundElement(xmlDoc, taxyear, email);
+
+                if (foundElement != null)
+                {
+                    foundElement.Element("Status").Value = status.ToString();
+                    foundElement.Element("TaxDue").Value = taxdue.ToString();
+                }
+                else
+                {
+
+                    XElement root = new XElement("Client");
+                    root.Add(new XElement("TaxYear", taxyear));
+                    root.Add(new XElement("Email", email));
+                    root.Add(new XElement("Status", status.ToString()));
+                    root.Add(new XElement("TaxDue", taxdue.ToString()));
+                    xmlDoc.Element("Clients").Add(root);
+                }
+
+                xmlDoc.Save(directory + "\\Files\\State.xml");
+                return null;
             }
-            else
+            catch (Exception ex)
             {
-
-                XElement root = new XElement("Client");
-                root.Add(new XElement("TaxYear", taxyear));
-                root.Add(new XElement("Email", email));
-                root.Add(new XElement("Status", status.ToString()));
-                root.Add(new XElement("TaxDue", taxdue.ToString()));
-                xmlDoc.Element("Clients").Add(root);
+                return ex.ToString();
             }
-
-            xmlDoc.Save(directory + "\\Files\\State.xml");
+            
         }
 
         private static XElement FoundElement(XDocument xmlDoc, string taxYear, string email)
