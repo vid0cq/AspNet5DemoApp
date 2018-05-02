@@ -38,9 +38,8 @@ namespace AspNetCoreDemoApp.Classes
         {
             try
             {
-                string directory = Environment.CurrentDirectory;
-
-                XDocument xmlDoc = XDocument.Load(Path.Combine(Path.Combine(directory,"Files"),"State.xml"));
+                string dir = Environment.CurrentDirectory;
+                XDocument xmlDoc = XDocument.Load(Path.Combine(Path.Combine(dir,"Files"),"State.xml"));
 
                 XElement foundElement = FoundElement(xmlDoc, taxyear, email);
 
@@ -60,7 +59,7 @@ namespace AspNetCoreDemoApp.Classes
                     xmlDoc.Element("Clients").Add(root);
                 }
 
-                xmlDoc.Save(directory + "\\Files\\State.xml");
+                xmlDoc.Save(Path.Combine(dir, "State.xml"));
                 return null;
             }
             catch (Exception ex)
