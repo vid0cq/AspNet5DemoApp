@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -37,9 +38,16 @@ namespace AspNetCoreDemoApp.Classes
         {
             try
             {
-                string directory = Environment.CurrentDirectory;
+                string dir = Environment.CurrentDirectory;
+                if (!File.Exists(Path.Combine(dir,"State.xml")))
+                {   
+                    var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("AspNetCoreDemoApp.Files.State.xml");
+                    StreamWriter sw = new StreamWriter(Path.Combine(dir, "State.xml"));
+                    sw.Write(stream);
+                    sw.Close();
+                }
 
-                XDocument xmlDoc = XDocument.Load(directory + "\\Files\\State.xml");
+                XDocument xmlDoc = XDocument.Load(Path.Combine(dir, "State.xml"));
 
                 XElement foundElement = FoundElement(xmlDoc, taxyear, email);
 
@@ -59,7 +67,7 @@ namespace AspNetCoreDemoApp.Classes
                     xmlDoc.Element("Clients").Add(root);
                 }
 
-                xmlDoc.Save(directory + "\\Files\\State.xml");
+                xmlDoc.Save(Path.Combine(dir, "State.xml"));
                 return null;
             }
             catch (Exception ex)
