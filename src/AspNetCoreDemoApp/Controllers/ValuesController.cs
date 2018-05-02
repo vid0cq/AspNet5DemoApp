@@ -69,9 +69,9 @@ namespace AspNetCoreDemoApp.Controllers
         // POST: api/values/updateStatus
         [Route("updateStatus")]
         [HttpPost]
-        public object UpdateState(string taxyear, string UTR, int status, decimal taxdue)
+        public object UpdateState(string taxyear, string email, int status, decimal taxdue)
         {
-            return new { response = "Status updated to " + status + " and tax due updated to " + taxdue + " for " + UTR + " for taxyear " + taxyear };
+            return new { response = "Status updated to " + status + " and tax due updated to " + taxdue + " for " + email + " for taxyear " + taxyear };
         }
 
         // GET api/values/5
