@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
+using AspNetCoreDemoApp.Classes;
 using AspNetCoreDemoApp.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -71,6 +72,7 @@ namespace AspNetCoreDemoApp.Controllers
         [HttpPost]
         public object UpdateState(string taxyear, string email, int status, decimal taxdue)
         {
+            Helper.WriteState(taxyear, email, status, taxdue);
             return new { response = "Status updated to " + status + " and tax due updated to " + taxdue + " for " + email + " for taxyear " + taxyear };
         }
 
