@@ -5,7 +5,7 @@ using System.Net;
 using AspNetCoreDemoApp.Classes;
 using AspNetCoreDemoApp.Models;
 using Microsoft.AspNetCore.Mvc;
-using Npgsql;
+//using Npgsql;
 
 namespace AspNetCoreDemoApp.Controllers
 {
@@ -90,33 +90,32 @@ namespace AspNetCoreDemoApp.Controllers
         // GET api/values/TestDatabaseConnection
         public object testDatabaseConnection()
         {
-            bool boolfound = false;
             string msg = String.Empty;
-            try
-            {
+            //try
+            //{
                 
-                NpgsqlConnection conn = new NpgsqlConnection("Server=ec2-79-125-14-195.eu-west-1.compute.amazonaws.com; Port=5432; User Id=jakalnwdyiotao; Password=aea0bebd0295f72e075e6b0da710f4c150898d7d608933d772bf9b2f330e7202; Database=d1gbb0gjgjner9; SSL Mode=Require;Trust Server Certificate=true;"); //<ip> is an actual ip address
-                conn.Open();
-                NpgsqlCommand cmd = new NpgsqlCommand();
-                NpgsqlDataReader dr = cmd.ExecuteReader();
-                if (dr.Read())
-                {
-                    boolfound = true;
-                    msg = "connection established";
-                }
-                if (boolfound == false)
-                {
-                    msg = "Data does not exist";
-                }
-                dr.Close();
-                conn.Close();
+            //    NpgsqlConnection conn = new NpgsqlConnection("Server=ec2-79-125-14-195.eu-west-1.compute.amazonaws.com; Port=5432; User Id=jakalnwdyiotao; Password=aea0bebd0295f72e075e6b0da710f4c150898d7d608933d772bf9b2f330e7202; Database=d1gbb0gjgjner9; SSL Mode=Require;Trust Server Certificate=true;"); //<ip> is an actual ip address
+            //    conn.Open();
+            //    NpgsqlCommand cmd = new NpgsqlCommand();
+            //    NpgsqlDataReader dr = cmd.ExecuteReader();
+            //    if (dr.Read())
+            //    {
+            //        boolfound = true;
+            //        msg = "connection established";
+            //    }
+            //    if (boolfound == false)
+            //    {
+            //        msg = "Data does not exist";
+            //    }
+            //    dr.Close();
+            //    conn.Close();
 
                 return msg;
-            }
-            catch(Exception e)
-            {
-                return e.ToString();
-            }
+            //}
+            //catch(Exception e)
+            //{
+            //    return e.ToString();
+            //}
         }
 	}
 }
