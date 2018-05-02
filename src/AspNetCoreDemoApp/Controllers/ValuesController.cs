@@ -5,6 +5,7 @@ using System.Net;
 using AspNetCoreDemoApp.Classes;
 using AspNetCoreDemoApp.Models;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 //using Npgsql;
 
 namespace AspNetCoreDemoApp.Controllers
@@ -64,8 +65,11 @@ namespace AspNetCoreDemoApp.Controllers
                 {
                     html = reader.ReadToEnd();
                 }
+                State state = new State();
+                String email = ((State)JsonConvert.DeserializeObject(html, state.GetType())).Email;
+                state = Helper.ReadState("2018", email);
 
-                return new { version = "1.0", response = new { outputSpeech = new { type = "PlainText", text = html } } };
+                return new { version = "1.0", response = new { outputSpeech = new { type = "PlainText", text = "The status of your tax return is " + state.Status } } };
             }
 		}
 
