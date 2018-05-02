@@ -12,7 +12,14 @@ namespace AspNetCoreDemoApp.Controllers
 		{
 			return new[] { "The status of your tax return is awaiting for client response" };
 		}
-                
+
+        [Route("privacyPolicy")]
+        [HttpGet]
+        public string PrivacyPolicy()
+        {
+            return "This is the Personal TAleXa private policy";
+        }
+
         // POST: api/values
         [HttpPost]
         public object Post()
@@ -20,11 +27,12 @@ namespace AspNetCoreDemoApp.Controllers
             return new { version = "1.0", response = new { outputSpeech = new { type = "PlainText", text = "The status of your tax return is awaiting for client response" } } };
 		}
 
+        // POST: api/values/updateStatus
         [Route("updateStatus")]
         [HttpPost]
-        public object UpdateState(string taxyear, string UTR, int status)
+        public object UpdateState(string taxyear, string UTR, int status, decimal taxdue)
         {
-            return new { response = "Status updated to " + status + " for " + UTR + " for taxyear " + taxyear };
+            return new { response = "Status updated to " + status + " and tax due updated to " + taxdue + " for " + UTR + " for taxyear " + taxyear };
         }
 
         // GET api/values/5
