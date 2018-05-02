@@ -11,23 +11,23 @@ namespace AspNetCoreDemoApp.Classes
 {
     public static class Helper
     {
-        public static State ReadState()
+        public static State ReadState(string taxYear, string email)
         {
-            State taxState = new State();
+            State taxState = null;
 
-            var asm = Assembly.GetExecutingAssembly();
-            using (var stream = asm.GetManifestResourceStream("Files.State.xml"))
+            string directory = Environment.CurrentDirectory;
+
+            XDocument xmlDoc = XDocument.Load(directory + "\\Files\\State.xml");
+
+            XElement foundElement = FoundElement(xmlDoc, taxYear, email);
+
+            if (foundElement != null)
             {
-                XDocument xmlDoc = XDocument.Load(stream);
-                taxState.TaxYear = xmlDoc.Root.Element("TaxYear").Value;
-                taxState.Email = xmlDoc.Root.Element("Email").Value;
-                if (string.IsNullOrEmpty(xmlDoc.Root.Element("Status").Value))
-                    taxState.Status = 0;
-                else taxState.Status = int.Parse(xmlDoc.Root.Element("Status").Value);
-
-                if (string.IsNullOrEmpty(xmlDoc.Root.Element("TaxDue").Value))
-                    taxState.TaxDue = 0;
-                else taxState.TaxDue = decimal.Parse(xmlDoc.Root.Element("TaxDue").Value);
+                taxState = new State();
+                taxState.TaxYear = foundElement.Element("TaxYear").Value;
+                taxState.Email = foundElement.Element("Email").Value;
+                taxState.Status = int.Parse(foundElement.Element("Status").Value);
+                taxState.TaxDue = decimal.Parse(foundElement.Element("TaxDue").Value);
             }
 
             return taxState;
@@ -35,17 +35,39 @@ namespace AspNetCoreDemoApp.Classes
 
         public static void WriteState(string taxyear, string email, int status, decimal taxdue)
         {
-            var asm = Assembly.GetExecutingAssembly();
-            using (var stream = asm.GetManifestResourceStream("Files.State.xml"))
-            {
-                XDocument xmlDoc = XDocument.Load(stream);
-                xmlDoc.Root.Element("TaxYear").Value = taxyear;
-                xmlDoc.Root.Element("Email").Value = email;
-                xmlDoc.Root.Element("Status").Value = status.ToString();
-                xmlDoc.Root.Element("TaxDue").Value = taxdue.ToString();
+            string directory = Environment.CurrentDirectory;
 
-                xmlDoc.Save(stream);
+            XDocument xmlDoc = XDocument.Load(directory + "\\Files\\State.xml");
+
+            XElement foundElement = FoundElement(xmlDoc, taxyear, email);            
+
+            if (foundElement != null)
+            {
+                foundElement.Element("Status").Value = status.ToString();
+                foundElement.Element("TaxDue").Value = taxdue.ToString();
             }
+            else
+            {
+
+                XElement root = new XElement("Client");
+                root.Add(new XElement("TaxYear", taxyear));
+                root.Add(new XElement("Email", email));
+                root.Add(new XElement("Status", status.ToString()));
+                root.Add(new XElement("TaxDue", taxdue.ToString()));
+                xmlDoc.Element("Clients").Add(root);
+            }
+
+            xmlDoc.Save(directory + "\\Files\\State.xml");
+        }
+
+        private static XElement FoundElement(XDocument xmlDoc, string taxYear, string email)
+        {
+            var foundElement = xmlDoc.Root
+                .Elements("Client")
+                .Where(b => b.Element("TaxYear").Value == taxYear && b.Element("Email").Value == email)
+                .FirstOrDefault();
+
+            return foundElement;
         }
     }
 }

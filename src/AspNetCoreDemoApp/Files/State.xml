@@ -1,7 +1,21 @@
-<?xml version="1.0" encoding="utf-8" ?>
-<State>
-  <TaxYear></TaxYear>
-  <Email></Email>
-  <Status></Status>
-  <TaxDue></TaxDue>
-</State>
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Clients>
+  <Client>
+    <TaxYear>2015</TaxYear>
+    <Email>andrei.g88@gmail.com</Email>
+    <Status>0</Status>
+    <TaxDue>10</TaxDue>
+  </Client>
+  <Client>
+    <TaxYear>2016</TaxYear>
+    <Email>andrei.g88@gmail.com</Email>
+    <Status>0</Status>
+    <TaxDue>2000</TaxDue>
+  </Client>
+  <Client>
+    <TaxYear>2017</TaxYear>
+    <Email>andrei.g88@gmail.com</Email>
+    <Status>4</Status>
+    <TaxDue>222</TaxDue>
+  </Client>
+</Clients>
