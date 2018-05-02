@@ -18,7 +18,7 @@ namespace AspNetCoreDemoApp.Classes
 
             string directory = Environment.CurrentDirectory;
 
-            XDocument xmlDoc = XDocument.Load(directory + "\\Files\\State.xml");
+            XDocument xmlDoc = XDocument.Load(Path.Combine(Path.Combine(directory, "Files"),"State.xml"));
 
             XElement foundElement = FoundElement(xmlDoc, taxYear, email);
 
