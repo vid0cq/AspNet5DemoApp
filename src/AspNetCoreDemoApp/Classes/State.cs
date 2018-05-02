@@ -23,7 +23,7 @@ namespace AspNetCoreDemoApp.Classes
         [JsonProperty("Email")]
         public string Email { get; set; }
         [JsonProperty("Status")]
-        public int Status { get; set; }
+        public string Status { get; set; }
         [JsonProperty("TaxDue ")]
         public decimal TaxDue { get; set; }
 

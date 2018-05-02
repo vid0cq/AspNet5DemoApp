@@ -73,14 +73,14 @@ namespace AspNetCoreDemoApp.Controllers
                 state = Helper.ReadState("2018", email);
                 msg += state == null ? "email not found " : state.Email;
 
-                return new { version = "1.0", response = new { outputSpeech = new { type = "PlainText", text = msg } } };
+                return new { version = "1.0", response = new { outputSpeech = new { type = "PlainText", text = state.Status } } };
             }
 		}
 
         // POST: api/values/updateStatus
         [Route("updateStatus")]
         [HttpPost]
-        public object UpdateState(string taxyear, string email, int status, decimal taxdue)
+        public object UpdateState(string taxyear, string email, string status, decimal taxdue)
         {
             var a = Helper.WriteState(taxyear, email, status, taxdue);
             if (a != null)
