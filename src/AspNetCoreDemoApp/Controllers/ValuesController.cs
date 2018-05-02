@@ -63,7 +63,7 @@ namespace AspNetCoreDemoApp.Controllers
                     html = reader.ReadToEnd();
                 }
 
-                return new { version = "1.0", response = new { outputSpeech = new { type = "PlainText", text = "The status of your tax return is awaiting for client response" } } };
+                return new { version = "1.0", response = new { outputSpeech = new { type = "PlainText", text = html } } };
             }
 		}
 
