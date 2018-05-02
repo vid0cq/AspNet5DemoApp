@@ -1,4 +1,7 @@
 using System.Collections.Generic;
+using System.IO;
+using System.Net;
+using AspNetCoreDemoApp.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AspNetCoreDemoApp.Controllers
@@ -22,9 +25,45 @@ namespace AspNetCoreDemoApp.Controllers
 
         // POST: api/values
         [HttpPost]
-        public object Post()
-		{
-            return new { version = "1.0", response = new { outputSpeech = new { type = "PlainText", text = "The status of your tax return is awaiting for client response" } } };
+        public object Post([FromBody]Skill data)
+        {
+            if (data.session.user.accessToken == null)
+            {
+                var skill = new Skill()
+                {
+                    version = "1.0",
+                    response = new Response()
+                    {
+                        outputSpeech = new OutputSpeech()
+                        {
+                            type = "PlainText",
+                            text = "Please use the companion app to authenticate on Amazon to start using this skill"
+                        },
+                        card = new Card()
+                        {
+                            type = "LinkAccount"
+                        },
+                        shouldEndSession = false
+                    },
+                    sessionAttributes = null
+                };
+                return skill;
+            }
+            else
+            {
+                var amznProfileURL = "https://api.amazon.com/user/profile?access_token=";
+                amznProfileURL += data.session.user.accessToken;
+                var rq = WebRequest.Create(amznProfileURL);
+                var html = string.Empty;
+                using (var response = rq.GetResponse())
+                using (Stream stream = response.GetResponseStream())
+                using (StreamReader reader = new StreamReader(stream))
+                {
+                    html = reader.ReadToEnd();
+                }
+
+                return new { version = "1.0", response = new { outputSpeech = new { type = "PlainText", text = "The status of your tax return is awaiting for client response" } } };
+            }
 		}
 
         // POST: api/values/updateStatus
