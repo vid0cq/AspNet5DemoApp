@@ -65,11 +65,15 @@ namespace AspNetCoreDemoApp.Controllers
                 {
                     html = reader.ReadToEnd();
                 }
+
+                var msg = String.Empty;
                 State state = new State();
                 String email = ((State)JsonConvert.DeserializeObject(html, state.GetType())).Email;
+                msg += email + " ";
                 state = Helper.ReadState("2018", email);
+                msg += state == null ? "email not found " : state.Email;
 
-                return new { version = "1.0", response = new { outputSpeech = new { type = "PlainText", text = "The status of your tax return is " + state.Status } } };
+                return new { version = "1.0", response = new { outputSpeech = new { type = "PlainText", text = msg } } };
             }
 		}
 
