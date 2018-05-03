@@ -90,13 +90,13 @@ namespace AspNetCoreDemoApp.Controllers
         // POST: api/values/updateStatus
         [Route("updateStatus")]
         [HttpPost]
-        public object UpdateState(string taxyear, string email, string status, decimal taxdue)
+        public object UpdateState(string taxyear, string email, string status, decimal taxdue, string name)
         {
-            var a = Helper.WriteState(taxyear, email, status, taxdue);
+            var a = Helper.WriteState(taxyear, email, status, taxdue, name);
             if (a != null)
                 return new { response = a };
             else
-                return new { response = "Status updated to " + status + " and tax due updated to " + taxdue + " for " + email + " for taxyear " + taxyear };
+                return new { response = "Status updated to " + status + " and tax due updated to " + taxdue + " for " + email + " for taxyear " + taxyear + " for name" + name};
         }
 
         // GET api/values/5
