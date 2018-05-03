@@ -30,12 +30,13 @@ namespace AspNetCoreDemoApp.Classes
                 taxState.Status = foundElement.Element("Status").Value;
                 taxState.TaxDue = decimal.Parse(foundElement.Element("TaxDue").Value);
                 taxState.Name = foundElement.Element("Name").Value;
+                taxState.IncomeSource = foundElement.Element("IncomeSource").Value;
             }
 
             return taxState;
         }
 
-        public static object WriteState(string taxyear, string email, string status, decimal taxdue, string name)
+        public static object WriteState(string taxyear, string email, string status, decimal taxdue, string name, string incomeSource)
         {
             string dir = Environment.CurrentDirectory;
             XDocument xmlDoc = XDocument.Load(Path.Combine(Path.Combine(dir,"Files"),"State.xml"));
@@ -47,6 +48,7 @@ namespace AspNetCoreDemoApp.Classes
                 foundElement.Element("Status").Value = status.ToString();
                 foundElement.Element("TaxDue").Value = taxdue.ToString();
                 foundElement.Element("Name").Value = name;
+                foundElement.Element("IncomeSource").Value = incomeSource;
             }
             else
             {
@@ -57,6 +59,7 @@ namespace AspNetCoreDemoApp.Classes
                 root.Add(new XElement("Status", status));
                 root.Add(new XElement("TaxDue", taxdue.ToString()));
                 root.Add(new XElement("Name", name));
+                root.Add(new XElement("IncomeSource", incomeSource));
                 xmlDoc.Element("Clients").Add(root);
             }
 

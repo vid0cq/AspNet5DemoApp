@@ -144,12 +144,12 @@ namespace AspNetCoreDemoApp.Controllers
         // POST: api/values/updateStatus
         [Route("updateStatus")]
         [HttpPost]
-        public object UpdateState(string taxyear, string email, string status, decimal taxdue, string name)
+        public object UpdateState(string taxyear, string email, string status, decimal taxdue, string name, string incomeSource)
         {
             try
             {
-                Helper.WriteState(taxyear, email, status, taxdue, name);
-                return new { response = "Status updated to " + status + " and tax due updated to " + taxdue + " for " + email + " for taxyear " + taxyear + " for name" + name };
+                Helper.WriteState(taxyear, email, status, taxdue, name, incomeSource);
+                return new { response = "Status updated to " + status + " and tax due updated to " + taxdue + " for " + email + " for taxyear " + taxyear + " for name" + name + " for income source" + incomeSource};
             }
             catch(Exception e)
             {
