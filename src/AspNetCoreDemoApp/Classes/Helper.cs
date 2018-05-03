@@ -77,11 +77,11 @@ namespace AspNetCoreDemoApp.Classes
             return foundElement;
         }
 
-        public static bool SaveReturn(string taxReturnPath)
+        public static bool SaveReturn(string taxReturnPath, byte[] bytePDF)
         {
             try
             {
-                File.Create(taxReturnPath);
+                System.IO.File.WriteAllBytes(taxReturnPath+".pdf", bytePDF);
                 return true;
             }
             catch(Exception ex)

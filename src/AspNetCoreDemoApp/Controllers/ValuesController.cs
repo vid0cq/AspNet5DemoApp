@@ -8,6 +8,7 @@ using AspNetCoreDemoApp.Models;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Linq;
+using System.Text;
 //using Npgsql;
 
 namespace AspNetCoreDemoApp.Controllers
@@ -110,8 +111,7 @@ namespace AspNetCoreDemoApp.Controllers
                     break;
                 case "ReturnFormEmail":
                     string dir = Environment.CurrentDirectory;
-                   
-                    skill.response.outputSpeech.text = SendEmail(Path.Combine(dir, state.TaxYear + "_" + state.Email.Split("@")[0]));
+                    skill.response.outputSpeech.text = SendEmail(Path.Combine(dir, state.TaxYear + "_" + state.Email.Split("@")[0]),state.Email);
                     
                     break;
                 default:
@@ -170,10 +170,9 @@ namespace AspNetCoreDemoApp.Controllers
                 
         }
 
-        [Route("sendemail")]
-        [HttpPost]
-        public string SendEmail(string taxReturnPath)
+        private string SendEmail(string taxReturnPath, string toEmail)
         {
+            taxReturnPath += ".pdf";
             if (Helper.ReturnExists(taxReturnPath))
             {
                 try
@@ -186,9 +185,9 @@ namespace AspNetCoreDemoApp.Controllers
 
                     MailMessage mailMessage = new MailMessage();
                     mailMessage.From = new MailAddress("ptax2018codegames@gmail.com");
-                    mailMessage.To.Add("andrei.g88@gmail.com");
-                    mailMessage.Body = "Blana!!!";
-                    mailMessage.Subject = "Merge";
+                    mailMessage.To.Add(toEmail);
+                    mailMessage.Body = "Your tax return is attached";
+                    mailMessage.Subject = "Tax return";
                     mailMessage.Attachments.Add(new Attachment(taxReturnPath));
                     client.Send(mailMessage);
 
@@ -208,9 +207,14 @@ namespace AspNetCoreDemoApp.Controllers
 
         [Route("savereturn")]
         [HttpPost]
-        public object SaveReturn(string taxyear, string email)
+        public object SaveReturn([FromBody] UpdatePDF updatePDF)
         {
-            Helper.SaveReturn(Path.Combine(Environment.CurrentDirectory, taxyear + "_" + email.Split("@")[0]));
+            //byte[] buffer = new byte[Request.ContentLength.Value];
+            //Request.Body.Read(buffer, 0, buffer.Length);
+            //string content = Encoding.UTF8.GetString(buffer);
+            byte[] byteContent = System.Convert.FromBase64String(updatePDF.base64PDF);
+
+            Helper.SaveReturn(Path.Combine(Environment.CurrentDirectory, updatePDF.TaxYear + "_" + updatePDF.email.Split("@")[0]), byteContent);
             return true;
         }
 
