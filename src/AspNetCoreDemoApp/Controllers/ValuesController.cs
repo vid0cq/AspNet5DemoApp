@@ -47,7 +47,7 @@ namespace AspNetCoreDemoApp.Controllers
                         {
                             type = "LinkAccount"
                         },
-                        shouldEndSession = false
+                        shouldEndSession = true
                     },
                     sessionAttributes = null
                 };
@@ -55,13 +55,22 @@ namespace AspNetCoreDemoApp.Controllers
             }
             else
             {
-                State state = GetState(data);
-                if (data.request.type == "LaunchRequest")
+                try
                 {
-                    return WelcomeResponse(state, data.session.sessionId);
-                }
+                    State state = GetState(data);
+                    if (data.request.type == "LaunchRequest")
+                    {
+                        return WelcomeResponse(state, data.session.sessionId);
+                    }
 
-                return IntentResponse(data.request.intent, state);
+                    return IntentResponse(data.request.intent, state);
+                }
+                catch(Exception e)
+                {
+                    var skill = IntentResponse(null, null);
+                    skill.response.outputSpeech.text = e.ToString();
+                    return skill;
+                }
             }
         }
 
@@ -106,7 +115,7 @@ namespace AspNetCoreDemoApp.Controllers
                 sessionAttributes = null
             };
 
-            if(intent==null) skill.response.outputSpeech.text = "I can't find the tax information you requested";
+            if(intent==null) skill.response.outputSpeech.text = "I can't find that information";
 
             switch (intent.name)
             {
