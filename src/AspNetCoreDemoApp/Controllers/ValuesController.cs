@@ -55,39 +55,78 @@ namespace AspNetCoreDemoApp.Controllers
             }
             else
             {
-                var amznProfileURL = "https://api.amazon.com/user/profile?access_token=";
-                amznProfileURL += data.session.user.accessToken;
-                var rq = WebRequest.Create(amznProfileURL);
-                var html = string.Empty;
-                using (var response = rq.GetResponse())
-                using (Stream stream = response.GetResponseStream())
-                using (StreamReader reader = new StreamReader(stream))
-                {
-                    html = reader.ReadToEnd();
-                }
-
-                var msg = String.Empty;
-                State state = new State();
-                String email = ((State)JsonConvert.DeserializeObject(html, state.GetType())).Email;
-                msg += email + " ";
-                state = Helper.ReadState("2018", email);
-                msg += state == null ? "email not found " : state.Email;
-
+                State state = GetState(data);
                 if (data.request.type == "LaunchRequest")
                 {
-                    return WelcomeResponse(state);
+                    return WelcomeResponse(state, data.session.sessionId);
                 }
 
-                if (data.request.intent.name== "ReturnStatus")
-                    return new { version = "1.0", response = new { outputSpeech = new { type = "PlainText", text = state.Status } } };
-                else if(data.request.intent.name == "ReturnTaxDue")
-                    return new { version = "1.0", response = new { outputSpeech = new { type = "PlainText", text = state.TaxDue} } };
-
-                return new { version = "1.0", response = new { outputSpeech = new { type = "PlainText", text = "I can't find the tax information you requested"} } };
+                return IntentResponse(data.request.intent, state);
             }
-		}
+        }
 
-        private Skill WelcomeResponse(State state)
+        private static State GetState(Skill data)
+        {
+            string html = GetUserProfile(data);
+            State state = new State();
+            String email = ((State)JsonConvert.DeserializeObject(html, state.GetType())).Email;
+            state = Helper.ReadState("2018", email);
+            return state;
+        }
+
+        private static string GetUserProfile(Skill data)
+        {
+            var amznProfileURL = "https://api.amazon.com/user/profile?access_token=";
+            amznProfileURL += data.session.user.accessToken;
+            var rq = WebRequest.Create(amznProfileURL);
+            var html = string.Empty;
+            using (var response = rq.GetResponse())
+            using (Stream stream = response.GetResponseStream())
+            using (StreamReader reader = new StreamReader(stream))
+            {
+                html = reader.ReadToEnd();
+            }
+
+            return html;
+        }
+
+        private Skill IntentResponse(Intent intent, State state)
+        {
+            var skill = new Skill
+            {
+                version = "1.0",
+                response = new Response()
+                {
+                    outputSpeech = new OutputSpeech()
+                    {
+                        type = "PlainText",
+                    },
+                    shouldEndSession = false
+                },
+                sessionAttributes = null
+            };
+
+            if(intent==null) skill.response.outputSpeech.text = "I can't find the tax information you requested";
+
+            switch (intent.name)
+            {
+                case "ReturnStatus":
+                    skill.response.outputSpeech.text = "Your tax return status is " + state.Status;
+                    break;
+                case "ReturnTaxDue":
+                    skill.response.outputSpeech.text = "Your tax due is " + state.TaxDue + "pounds";
+                    break;
+                default:
+                    skill.response.outputSpeech.text = "I can't find the tax information you requested";
+                    break;
+            }
+
+            return skill;
+            //return new { version = "1.0", response = new { outputSpeech = new { type = "PlainText", text = state.Status } } };
+            //return new { version = "1.0", response = new { outputSpeech = new { type = "PlainText", text = state.TaxDue } } };
+        }
+
+        private Skill WelcomeResponse(State state, string sessionId)
         {
             //return new { version = "1.0", response = new { outputSpeech = new { type = "PlainText", text = "Welcome to Personal tax " + state.Name.Split(" ")[0] } } };
             return new Skill()
