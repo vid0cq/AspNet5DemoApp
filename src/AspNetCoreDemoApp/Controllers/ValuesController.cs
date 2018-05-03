@@ -55,11 +55,6 @@ namespace AspNetCoreDemoApp.Controllers
             }
             else
             {
-                if(data.request.type== "LaunchRequest")
-                {
-                    return new { version = "1.0", response = new { outputSpeech = new { type = "PlainText", text = "Welcome to Personal tax" } } };
-                }
-
                 var amznProfileURL = "https://api.amazon.com/user/profile?access_token=";
                 amznProfileURL += data.session.user.accessToken;
                 var rq = WebRequest.Create(amznProfileURL);
