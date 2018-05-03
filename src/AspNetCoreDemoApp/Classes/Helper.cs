@@ -37,40 +37,32 @@ namespace AspNetCoreDemoApp.Classes
 
         public static object WriteState(string taxyear, string email, string status, decimal taxdue, string name)
         {
-            try
+            string dir = Environment.CurrentDirectory;
+            XDocument xmlDoc = XDocument.Load(Path.Combine(Path.Combine(dir,"Files"),"State.xml"));
+
+            XElement foundElement = FoundElement(xmlDoc, taxyear, email);
+
+            if (foundElement != null)
             {
-                string dir = Environment.CurrentDirectory;
-                XDocument xmlDoc = XDocument.Load(Path.Combine(Path.Combine(dir,"Files"),"State.xml"));
-
-                XElement foundElement = FoundElement(xmlDoc, taxyear, email);
-
-                if (foundElement != null)
-                {
-                    foundElement.Element("Status").Value = status.ToString();
-                    foundElement.Element("TaxDue").Value = taxdue.ToString();
-                    foundElement.Element("Name").Value = name;
-                }
-                else
-                {
-
-                    XElement root = new XElement("Client");
-                    root.Add(new XElement("TaxYear", taxyear));
-                    root.Add(new XElement("Email", email));
-                    root.Add(new XElement("Status", status));
-                    root.Add(new XElement("TaxDue", taxdue.ToString()));
-                    root.Add(new XElement("Name", name));
-                    xmlDoc.Element("Clients").Add(root);
-                }
-
-                xmlDoc.Save(Path.Combine(Path.Combine(dir, "Files"), "State.xml"));
-                return null;
+                foundElement.Element("Status").Value = status.ToString();
+                foundElement.Element("TaxDue").Value = taxdue.ToString();
+                foundElement.Element("Name").Value = name;
             }
-            catch (Exception ex)
+            else
             {
-                return ex.ToString();
+
+                XElement root = new XElement("Client");
+                root.Add(new XElement("TaxYear", taxyear));
+                root.Add(new XElement("Email", email));
+                root.Add(new XElement("Status", status));
+                root.Add(new XElement("TaxDue", taxdue.ToString()));
+                root.Add(new XElement("Name", name));
+                xmlDoc.Element("Clients").Add(root);
             }
-            
-        }
+
+            xmlDoc.Save(Path.Combine(Path.Combine(dir, "Files"), "State.xml"));
+            return null;
+    }
 
         private static XElement FoundElement(XDocument xmlDoc, string taxYear, string email)
         {

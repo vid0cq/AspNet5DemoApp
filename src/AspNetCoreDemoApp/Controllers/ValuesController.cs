@@ -75,7 +75,7 @@ namespace AspNetCoreDemoApp.Controllers
 
                 if (data.request.type == "LaunchRequest")
                 {
-                    return new { version = "1.0", response = new { outputSpeech = new { type = "PlainText", text = "Welcome to Personal tax " + state.Name.Split(" ")[0] } } };
+                    return WelcomeResponse(state);
                 }
 
                 if (data.request.intent.name== "ReturnStatus")
@@ -87,16 +87,40 @@ namespace AspNetCoreDemoApp.Controllers
             }
 		}
 
+        private Skill WelcomeResponse(State state)
+        {
+            //return new { version = "1.0", response = new { outputSpeech = new { type = "PlainText", text = "Welcome to Personal tax " + state.Name.Split(" ")[0] } } };
+            return new Skill()
+            {
+                version = "1.0",
+                response = new Response()
+                {
+                    outputSpeech = new OutputSpeech()
+                    {
+                        type = "PlainText",
+                        text = "Welcome to Personal tax " + state.Name.Split(" ")[0]
+                    },
+                    shouldEndSession = false
+                },
+                sessionAttributes = null
+            };
+        }
+
         // POST: api/values/updateStatus
         [Route("updateStatus")]
         [HttpPost]
         public object UpdateState(string taxyear, string email, string status, decimal taxdue, string name)
         {
-            var a = Helper.WriteState(taxyear, email, status, taxdue, name);
-            if (a != null)
-                return new { response = a };
-            else
+            try
+            {
+                Helper.WriteState(taxyear, email, status, taxdue, name);
                 return new { response = "Status updated to " + status + " and tax due updated to " + taxdue + " for " + email + " for taxyear " + taxyear + " for name" + name };
+            }
+            catch(Exception e)
+            {
+                return e.ToString();
+            }
+                
         }
 
         // GET api/values/5
