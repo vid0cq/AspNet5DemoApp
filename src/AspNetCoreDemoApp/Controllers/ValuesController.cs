@@ -55,6 +55,11 @@ namespace AspNetCoreDemoApp.Controllers
             }
             else
             {
+                if(data.request.type== "LaunchRequest")
+                {
+                    return new { version = "1.0", response = new { outputSpeech = new { type = "PlainText", text = "Welcome to Personal tax" } } };
+                }
+
                 var amznProfileURL = "https://api.amazon.com/user/profile?access_token=";
                 amznProfileURL += data.session.user.accessToken;
                 var rq = WebRequest.Create(amznProfileURL);
@@ -73,7 +78,12 @@ namespace AspNetCoreDemoApp.Controllers
                 state = Helper.ReadState("2018", email);
                 msg += state == null ? "email not found " : state.Email;
 
-                return new { version = "1.0", response = new { outputSpeech = new { type = "PlainText", text = state.Status } } };
+                if(data.request.intent.name== "ReturnStatus")
+                    return new { version = "1.0", response = new { outputSpeech = new { type = "PlainText", text = state.Status } } };
+                else if(data.request.intent.name == "ReturnTaxDue")
+                    return new { version = "1.0", response = new { outputSpeech = new { type = "PlainText", text = state.TaxDue} } };
+
+                return new { version = "1.0", response = new { outputSpeech = new { type = "PlainText", text = "I can't find the tax information you requested"} } };
             }
 		}
 
