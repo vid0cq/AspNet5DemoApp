@@ -76,5 +76,26 @@ namespace AspNetCoreDemoApp.Classes
 
             return foundElement;
         }
+
+        public static bool SaveReturn(string taxReturnPath)
+        {
+            try
+            {
+                File.Create(taxReturnPath);
+                return true;
+            }
+            catch(Exception ex)
+            {
+                return false;
+            }
+            
+        }
+
+        public static bool ReturnExists(string taxReturnPath)
+        {
+            if (File.Exists(taxReturnPath))
+                return true;
+            else return false;
+        }
     }
 }

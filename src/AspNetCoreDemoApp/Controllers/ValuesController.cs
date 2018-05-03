@@ -1,7 +1,8 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
+using System.Net.Mail;
 using AspNetCoreDemoApp.Classes;
 using AspNetCoreDemoApp.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -102,6 +103,12 @@ namespace AspNetCoreDemoApp.Controllers
                 case "ReturnTaxDue":
                     skill.response.outputSpeech.text = "Your tax due is " + state.TaxDue + " pounds";
                     break;
+                case "ReturnFormEmail":
+                    string dir = Environment.CurrentDirectory;
+                   
+                    skill.response.outputSpeech.text = SendEmail(Path.Combine(dir, state.TaxYear + "_" + state.Email.Split("@")[0]));
+                    
+                    break;
                 default:
                     skill.response.outputSpeech.text = "I can't find the tax information you requested";
                     break;
@@ -156,6 +163,50 @@ namespace AspNetCoreDemoApp.Controllers
                 return e.ToString();
             }
                 
+        }
+
+        [Route("sendemail")]
+        [HttpPost]
+        public string SendEmail(string taxReturnPath)
+        {
+            if (Helper.ReturnExists(taxReturnPath))
+            {
+                try
+                {
+                    SmtpClient client = new SmtpClient("smtp.gmail.com");
+                    client.UseDefaultCredentials = false;
+                    client.Credentials = new NetworkCredential("ptax2018codegames@gmail.com", "ilab2018games");
+                    client.EnableSsl = true;
+                    client.Port = 587;
+
+                    MailMessage mailMessage = new MailMessage();
+                    mailMessage.From = new MailAddress("ptax2018codegames@gmail.com");
+                    mailMessage.To.Add("andrei.g88@gmail.com");
+                    mailMessage.Body = "Blana!!!";
+                    mailMessage.Subject = "Merge";
+                    mailMessage.Attachments.Add(new Attachment(taxReturnPath));
+                    client.Send(mailMessage);
+
+                    return "Tax Return was sent";
+                }
+                catch (Exception ex)
+                {
+                    return "Error on sending the Tax Return";
+                }
+            }
+            else
+            {
+                return "Tax Return does not exist on the server";
+            }
+            
+        }
+
+        [Route("savereturn")]
+        [HttpPost]
+        public object SaveReturn(string taxyear, string email)
+        {
+            Helper.SaveReturn(Path.Combine(Environment.CurrentDirectory, taxyear + "_" + email.Split("@")[0]));
+            return true;
         }
 
         private static State GetState(Skill data)
