@@ -6,6 +6,7 @@ using AspNetCoreDemoApp.Classes;
 using AspNetCoreDemoApp.Models;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using System.Linq;
 //using Npgsql;
 
 namespace AspNetCoreDemoApp.Controllers
@@ -101,6 +102,10 @@ namespace AspNetCoreDemoApp.Controllers
                     break;
                 case "ReturnTaxDue":
                     skill.response.outputSpeech.text = "Your tax due is " + state.TaxDue + " pounds";
+                    break;
+                case "ReturnIncomeSources":
+                    var incomeSources = state.IncomeSource.Remove(state.IncomeSource.Length - 1).Split("_").Aggregate<String>((phrase, next) => phrase + "," + next);
+                    skill.response.outputSpeech.text = "Your tax return income sources are: " + incomeSources;
                     break;
                 default:
                     skill.response.outputSpeech.text = "I can't find the tax information you requested";
