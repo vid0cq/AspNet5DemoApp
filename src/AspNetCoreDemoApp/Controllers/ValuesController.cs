@@ -58,12 +58,14 @@ namespace AspNetCoreDemoApp.Controllers
                 try
                 {
                     State state = GetState(data);
-                    if (data.request.type == "LaunchRequest")
+                    switch (data.request.type)
                     {
-                        return WelcomeResponse(state, data.session.sessionId);
+                        case "LaunchRequest":
+                        case "SessionEndedRequest":
+                            return FlowResponse(state, data.request.type);
+                        default:
+                            return IntentResponse(data.request.intent, state);
                     }
-
-                    return IntentResponse(data.request.intent, state);
                 }
                 catch(Exception e)
                 {
@@ -72,31 +74,6 @@ namespace AspNetCoreDemoApp.Controllers
                     return skill;
                 }
             }
-        }
-
-        private static State GetState(Skill data)
-        {
-            string html = GetUserProfile(data);
-            State state = new State();
-            String email = ((State)JsonConvert.DeserializeObject(html, state.GetType())).Email;
-            state = Helper.ReadState("2018", email);
-            return state;
-        }
-
-        private static string GetUserProfile(Skill data)
-        {
-            var amznProfileURL = "https://api.amazon.com/user/profile?access_token=";
-            amznProfileURL += data.session.user.accessToken;
-            var rq = WebRequest.Create(amznProfileURL);
-            var html = string.Empty;
-            using (var response = rq.GetResponse())
-            using (Stream stream = response.GetResponseStream())
-            using (StreamReader reader = new StreamReader(stream))
-            {
-                html = reader.ReadToEnd();
-            }
-
-            return html;
         }
 
         private Skill IntentResponse(Intent intent, State state)
@@ -135,10 +112,10 @@ namespace AspNetCoreDemoApp.Controllers
             //return new { version = "1.0", response = new { outputSpeech = new { type = "PlainText", text = state.TaxDue } } };
         }
 
-        private Skill WelcomeResponse(State state, string sessionId)
+        private Skill FlowResponse(State state, string requestType)
         {
             //return new { version = "1.0", response = new { outputSpeech = new { type = "PlainText", text = "Welcome to Personal tax " + state.Name.Split(" ")[0] } } };
-            return new Skill()
+            var skill = new Skill()
             {
                 version = "1.0",
                 response = new Response()
@@ -146,12 +123,22 @@ namespace AspNetCoreDemoApp.Controllers
                     outputSpeech = new OutputSpeech()
                     {
                         type = "PlainText",
-                        text = "Welcome to Personal tax " + state.Name.Split(" ")[0]
                     },
-                    shouldEndSession = false
                 },
                 sessionAttributes = null
             };
+
+            if (requestType == "LaunchRequest")
+            {
+                skill.response.outputSpeech.text = "Welcome to Personal tax ";
+                skill.response.shouldEndSession = false;
+            }
+            else
+                skill.response.outputSpeech.text = "Bye ";
+
+            skill.response.outputSpeech.text += state.Name.Split(" ")[0];
+
+            return skill;
         }
 
         // POST: api/values/updateStatus
@@ -169,6 +156,31 @@ namespace AspNetCoreDemoApp.Controllers
                 return e.ToString();
             }
                 
+        }
+
+        private static State GetState(Skill data)
+        {
+            string html = GetUserProfile(data);
+            State state = new State();
+            String email = ((State)JsonConvert.DeserializeObject(html, state.GetType())).Email;
+            state = Helper.ReadState("2018", email);
+            return state;
+        }
+
+        private static string GetUserProfile(Skill data)
+        {
+            var amznProfileURL = "https://api.amazon.com/user/profile?access_token=";
+            amznProfileURL += data.session.user.accessToken;
+            var rq = WebRequest.Create(amznProfileURL);
+            var html = string.Empty;
+            using (var response = rq.GetResponse())
+            using (Stream stream = response.GetResponseStream())
+            using (StreamReader reader = new StreamReader(stream))
+            {
+                html = reader.ReadToEnd();
+            }
+
+            return html;
         }
 
         // GET api/values/5
