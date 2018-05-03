@@ -1,10 +1,11 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Clients>
   <Client>
     <TaxYear>2017</TaxYear>
     <Email>andrei.g88@gmail.com</Email>
     <Status>Awaiting client response</Status>
     <TaxDue>250</TaxDue>
+    <IncomeSource></IncomeSource>
     <Name>Andrei Gal</Name>
   </Client>
   <Client>
@@ -12,13 +13,15 @@
     <Email>andrei.g88@gmail.com</Email>
     <Status>Awaiting client response</Status>
     <TaxDue>350</TaxDue>
+    <IncomeSource>Interest from UK Banks etc_Tax Return Other Information_</IncomeSource>
     <Name>Andrei Gal</Name>
   </Client>
   <Client>
     <TaxYear>2018</TaxYear>
     <Email>victor.chira@gmail.com</Email>
-    <Status>Awaiting client response</Status>
-    <TaxDue>450</TaxDue>
-    <Name>test chiki</Name>
+    <Status>Awaiting response to FBI submission</Status>
+    <TaxDue>7600</TaxDue>
+    <IncomeSource>Interest from UK Banks etc_Tax Return Other Information_Capital gains_</IncomeSource>
+    <Name>CHICHICHAN NEW CLIENT</Name>
   </Client>
 </Clients>
