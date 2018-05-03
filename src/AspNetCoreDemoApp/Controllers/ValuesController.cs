@@ -100,7 +100,7 @@ namespace AspNetCoreDemoApp.Controllers
                     skill.response.outputSpeech.text = "Your tax return status is " + state.Status;
                     break;
                 case "ReturnTaxDue":
-                    skill.response.outputSpeech.text = "Your tax due is " + state.TaxDue + "pounds";
+                    skill.response.outputSpeech.text = "Your tax due is " + state.TaxDue + " pounds";
                     break;
                 default:
                     skill.response.outputSpeech.text = "I can't find the tax information you requested";
@@ -163,7 +163,10 @@ namespace AspNetCoreDemoApp.Controllers
             string html = GetUserProfile(data);
             State state = new State();
             String email = ((State)JsonConvert.DeserializeObject(html, state.GetType())).Email;
-            state = Helper.ReadState("2018", email);
+            string taxyear = "2018";
+            if (data.request.intent != null && data.request.intent.slots != null && data.request.intent.slots.TaxYear != null && data.request.intent.slots.TaxYear.value != null)
+                taxyear = data.request.intent.slots.TaxYear.value;
+            state = Helper.ReadState(taxyear, email);
             return state;
         }
 

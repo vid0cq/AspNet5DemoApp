@@ -1,24 +1,24 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Clients>
   <Client>
     <TaxYear>2017</TaxYear>
     <Email>andrei.g88@gmail.com</Email>
-    <Status>4</Status>
-    <TaxDue>222</TaxDue>
+    <Status>Awaiting client response</Status>
+    <TaxDue>250</TaxDue>
     <Name>Andrei Gal</Name>
   </Client>
   <Client>
     <TaxYear>2018</TaxYear>
     <Email>andrei.g88@gmail.com</Email>
-    <Status>4</Status>
-    <TaxDue>222</TaxDue>
+    <Status>Awaiting client response</Status>
+    <TaxDue>350</TaxDue>
     <Name>Andrei Gal</Name>
   </Client>
   <Client>
     <TaxYear>2018</TaxYear>
     <Email>victor.chira@gmail.com</Email>
-    <Status>4</Status>
-    <TaxDue>222</TaxDue>
+    <Status>Awaiting client response</Status>
+    <TaxDue>450</TaxDue>
     <Name>test chiki</Name>
   </Client>
 </Clients>

@@ -5,11 +5,10 @@ using System.Threading.Tasks;
 
 namespace AspNetCoreDemoApp.Models
 {
-    public class Intent
+    public class TaxYear
     {
         public string name { get; set; }
-        public string confirmationStatus { get; set; }
-
-        public Slots slots { get; set; }
+        public string value { get; set; }
+        public string confirmation { get; set; }
     }
 }
