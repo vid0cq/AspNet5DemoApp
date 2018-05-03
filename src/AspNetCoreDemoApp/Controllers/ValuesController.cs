@@ -78,7 +78,12 @@ namespace AspNetCoreDemoApp.Controllers
                 state = Helper.ReadState("2018", email);
                 msg += state == null ? "email not found " : state.Email;
 
-                if(data.request.intent.name== "ReturnStatus")
+                if (data.request.type == "LaunchRequest")
+                {
+                    return new { version = "1.0", response = new { outputSpeech = new { type = "PlainText", text = "Welcome to Personal tax " + state.Name.Split(" ")[0] } } };
+                }
+
+                if (data.request.intent.name== "ReturnStatus")
                     return new { version = "1.0", response = new { outputSpeech = new { type = "PlainText", text = state.Status } } };
                 else if(data.request.intent.name == "ReturnTaxDue")
                     return new { version = "1.0", response = new { outputSpeech = new { type = "PlainText", text = state.TaxDue} } };
@@ -90,13 +95,13 @@ namespace AspNetCoreDemoApp.Controllers
         // POST: api/values/updateStatus
         [Route("updateStatus")]
         [HttpPost]
-        public object UpdateState(string taxyear, string email, string status, decimal taxdue)
+        public object UpdateState(string taxyear, string email, string status, decimal taxdue, string name)
         {
-            var a = Helper.WriteState(taxyear, email, status, taxdue);
+            var a = Helper.WriteState(taxyear, email, status, taxdue, name);
             if (a != null)
                 return new { response = a };
             else
-                return new { response = "Status updated to " + status + " and tax due updated to " + taxdue + " for " + email + " for taxyear " + taxyear };
+                return new { response = "Status updated to " + status + " and tax due updated to " + taxdue + " for " + email + " for taxyear " + taxyear + " for name" + name };
         }
 
         // GET api/values/5

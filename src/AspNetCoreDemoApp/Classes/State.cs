@@ -26,6 +26,8 @@ namespace AspNetCoreDemoApp.Classes
         public string Status { get; set; }
         [JsonProperty("TaxDue ")]
         public decimal TaxDue { get; set; }
+        [JsonProperty("Name")]
+        public string Name { get; set; }
 
         #endregion
 

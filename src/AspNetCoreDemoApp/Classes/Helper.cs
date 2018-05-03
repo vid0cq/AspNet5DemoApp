@@ -29,12 +29,13 @@ namespace AspNetCoreDemoApp.Classes
                 taxState.Email = foundElement.Element("Email").Value;
                 taxState.Status = foundElement.Element("Status").Value;
                 taxState.TaxDue = decimal.Parse(foundElement.Element("TaxDue").Value);
+                taxState.Name = foundElement.Element("Name").Value;
             }
 
             return taxState;
         }
 
-        public static object WriteState(string taxyear, string email, string status, decimal taxdue)
+        public static object WriteState(string taxyear, string email, string status, decimal taxdue, string name)
         {
             try
             {
@@ -47,6 +48,7 @@ namespace AspNetCoreDemoApp.Classes
                 {
                     foundElement.Element("Status").Value = status.ToString();
                     foundElement.Element("TaxDue").Value = taxdue.ToString();
+                    foundElement.Element("Name").Value = name;
                 }
                 else
                 {
@@ -56,6 +58,7 @@ namespace AspNetCoreDemoApp.Classes
                     root.Add(new XElement("Email", email));
                     root.Add(new XElement("Status", status));
                     root.Add(new XElement("TaxDue", taxdue.ToString()));
+                    root.Add(new XElement("Name", name));
                     xmlDoc.Element("Clients").Add(root);
                 }
 
